@@ -102,7 +102,9 @@ public class CommunityPanel extends JPanel {
         Community s =new Community();
         s.setName(textField1.getText());
         cityList.getCity(j).communityList.addCommunity(s);
-        JOptionPane.showMessageDialog(this,"city added");
+        s.houseList = new HouseList();
+        s.houseList.construct();
+        JOptionPane.showMessageDialog(this,"community added");
         textField1.setText("");
         textField2.setText("");
     }

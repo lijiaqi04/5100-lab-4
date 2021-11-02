@@ -29,7 +29,7 @@ public class housePanel extends JPanel {
         this.communityList=new CommunityList();
         for(City s:cityList.getCityList()){
             for( Community v : s.communityList.getCommunityList()) {
-                if (v.getHouseList() == null) {
+                if (v.getHouseList() == null||v.getHouseList().getHouseList()==null||v.getHouseList().getHouseList().size()==0) {
                     this.communityList.addCommunity(v);
                     continue;
                 } else {
