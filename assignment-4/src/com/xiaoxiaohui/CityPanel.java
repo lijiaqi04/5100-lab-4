@@ -61,25 +61,7 @@ public class CityPanel extends JPanel {
         populateTable();
     }
 
-    private void button3MousePressed(MouseEvent e) {
-        DefaultTableModel model = (DefaultTableModel) table1.getModel();
-        cityList.getCityList();
-        for(int i = 0; i<model.getRowCount(); i++) {
-            String temp_name = (String) model.getValueAt(i, 0);
-            int z = 0;
-            for (int j = 0; j < temp_name.length(); j++) {
 
-                if (!Character.isAlphabetic(temp_name.charAt(z))) {
-                    JOptionPane.showMessageDialog(this,"invalid change");
-                    return;
-                }
-               cityList.getCityList().get(i).setName(temp_name);
-
-            }
-        }
-        JOptionPane.showMessageDialog(this,"successful change");
-        populateTable();
-    }
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - unknown
@@ -88,19 +70,15 @@ public class CityPanel extends JPanel {
         label1 = new JLabel();
         textField1 = new JTextField();
         button2 = new JButton();
-        button3 = new JButton();
         button5 = new JButton();
         button4 = new JButton();
 
         //======== this ========
-        setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder (
-        new javax . swing. border .EmptyBorder ( 0, 0 ,0 , 0) ,  "JFor\u006dDesi\u0067ner \u0045valu\u0061tion"
-        , javax. swing .border . TitledBorder. CENTER ,javax . swing. border .TitledBorder . BOTTOM
-        , new java. awt .Font ( "Dia\u006cog", java .awt . Font. BOLD ,12 )
-        ,java . awt. Color .red ) , getBorder () ) );  addPropertyChangeListener(
-        new java. beans .PropertyChangeListener ( ){ @Override public void propertyChange (java . beans. PropertyChangeEvent e
-        ) { if( "bord\u0065r" .equals ( e. getPropertyName () ) )throw new RuntimeException( )
-        ;} } );
+        setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder( 0
+        , 0, 0, 0) , "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM
+        , new java .awt .Font ("D\u0069al\u006fg" ,java .awt .Font .BOLD ,12 ), java. awt. Color. red) ,
+         getBorder( )) );  addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e
+        ) {if ("\u0062or\u0064er" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
         setLayout(new MigLayout(
             "hidemode 3",
             // columns
@@ -129,8 +107,17 @@ public class CityPanel extends JPanel {
                 new String[] {
                     "city's name"
                 }
-            ));
+            ) {
+                boolean[] columnEditable = new boolean[] {
+                    false
+                };
+                @Override
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return columnEditable[columnIndex];
+                }
+            });
             table1.setPreferredScrollableViewportSize(new Dimension(450, 300));
+            table1.setShowHorizontalLines(false);
             scrollPane1.setViewportView(table1);
         }
         add(scrollPane1, "cell 0 1 4 2");
@@ -149,16 +136,6 @@ public class CityPanel extends JPanel {
             }
         });
         add(button2, "cell 1 3");
-
-        //---- button3 ----
-        button3.setText("save changes");
-        button3.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                button3MousePressed(e);
-            }
-        });
-        add(button3, "cell 2 3");
 
         //---- button5 ----
         button5.setText("refresh");
@@ -197,7 +174,6 @@ public class CityPanel extends JPanel {
     private JLabel label1;
     private JTextField textField1;
     private JButton button2;
-    private JButton button3;
     private JButton button5;
     private JButton button4;
     // JFormDesigner - End of variables declaration  //GEN-END:variables

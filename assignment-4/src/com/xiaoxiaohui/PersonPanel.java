@@ -10,6 +10,8 @@ import javax.swing.table.*;
 import net.miginfocom.swing.*;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author unknown
@@ -18,9 +20,30 @@ public class PersonPanel extends JPanel {
 
     PersonDirectory personDirectory;
     System system;
+    CityList cityList;
+    CommunityList communityList;
+    HouseList houseList;
     public PersonPanel(System system) {
         initComponents();
         this.personDirectory =system.getPersonDirectory();
+        this.houseList = new HouseList();
+        List<House> list =new ArrayList<>();
+        this.cityList = system.getCityList();
+        this.communityList=new CommunityList();
+        for(City s:cityList.getCityList()){
+            for( Community v : s.communityList.getCommunityList()) {
+                if (v.getHouseList() == null) {
+                    this.communityList.addCommunity(v);
+                    continue;
+                } else {
+                    this.communityList.addCommunity(v);
+                    for (House x : v.getHouseList().houseList) {
+                        list.add(x);
+                    }
+                }
+            }
+        }
+        houseList.setHouseList(list);
         populateTable();
         table1.getTableHeader().setBackground(new Color(255, 255, 255, 0));
     }
@@ -68,7 +91,20 @@ public class PersonPanel extends JPanel {
                 return;
             }
         }
+
         String house = textField2.getText();
+        int pos = 0;
+        for(House z: houseList.getHouseList()){
+            if(pos<houseList.getHouseList().size()&&!z.getName().equals(house)){
+                pos++;
+            }
+        }
+        if(pos>=houseList.getHouseList().size()){
+            JOptionPane.showMessageDialog(this,"no such house");
+            textField2.setText("");
+            return;
+        }
+
         person.setAge(age);
         person.setName(name);
         person.setHouse(house);
@@ -104,19 +140,30 @@ public class PersonPanel extends JPanel {
         for(int i = 0; i<model.getRowCount(); i++) {
             for (int j = 0; j < model.getColumnCount(); j++) {
                 if (j == 0) {
-                    String temp_name = (String) model.getValueAt(i, j);
-                    for (int g = 0; g < temp_name.length(); g++) {
-                        if (!Character.isAlphabetic(temp_name.charAt(i))) {
-                            JOptionPane.showMessageDialog(this, "wrong input of name");
-                            return;
+                    Object temp = model.getValueAt(i, j);
+                    if (temp instanceof Number) {
+                        JOptionPane.showMessageDialog(this, "wrong input of name");
+                        return;
+                    } else {
+                        String temp_name = (String) model.getValueAt(i, j);
+                        for (int g = 0; g < temp_name.length(); g++) {
+                            if (Character.isDigit(temp_name.charAt(g))) {
+                                JOptionPane.showMessageDialog(this, "wrong input of name");
+                                return;
+                            }
                         }
+                        personDirectory.getPerson(i).setName(temp_name);
                     }
-                    personDirectory.getPerson(i).setName(temp_name);
                 }
-                if(j==1){
+                if (j == 1) {
+                    Object temp = model.getValueAt(i, j);
+                    if (temp instanceof Number) {
+                        personDirectory.getPerson(i).setAge((Integer) temp);
+                    }
+                    else {
                         String temp_age = (String) model.getValueAt(i, j);
                         for (int g = 0; g < temp_age.length(); g++) {
-                            if (!Character.isDigit(temp_age.charAt(i))) {
+                            if (!Character.isDigit(temp_age.charAt(g))) {
                                 JOptionPane.showMessageDialog(this, "wrong input of age");
 
                                 return;
@@ -125,11 +172,13 @@ public class PersonPanel extends JPanel {
                         int age1 = Integer.parseInt(temp_age);
                         personDirectory.getPerson(i).setAge(age1);
                     }
-                if(j==2){
-                    String house = (String) model.getValueAt(i, j);
-                    personDirectory.getPerson(i).setHouse(house);
                 }
+                    if (j == 2) {
+                        String house = (String) model.getValueAt(i, j);
+                        personDirectory.getPerson(i).setHouse(house);
+                    }
                 }
+
             }
         JOptionPane.showMessageDialog(this,"successful change");
         populateTable();

@@ -7,6 +7,7 @@ public class System {
     PatientDirectory patientDirectory;
     PersonDirectory personDirectory;
     CityList cityList;
+    HouseList houseList;
 
     public PatientDirectory getPatientDirectory() {
         return patientDirectory;
@@ -101,6 +102,7 @@ public class System {
         houseList3.setHouseList(houseList2);
         community.houseList=houseList;
         community1.houseList=houseList3;
+
     }
 
     public void setPatientDirectory(PatientDirectory patientDirectory) {

@@ -22,6 +22,7 @@ public class housePanel extends JPanel {
     System system;
     public housePanel( System system) {
         initComponents();
+        this.system = system;
         this.houseList = new HouseList();
         List<House> list =new ArrayList<>();
         this.cityList = system.getCityList();
@@ -66,19 +67,28 @@ public class housePanel extends JPanel {
     private void button3MousePressed(MouseEvent e) {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         for (int i = 0; i < model.getRowCount(); i++) {
-            String temp_name = (String) model.getValueAt(i, 1);
-            int x = 0;
-            while(x<communityList.getCommunityList().size()&&!temp_name.equals(communityList.getCommunity(x).getName())){
-                x++;
-            }
-            if(x>=communityList.getCommunityList().size()){
+            Object temp = model.getValueAt(i, 1);
+            if (temp instanceof Number) {
                 JOptionPane.showMessageDialog(this, "no such community");
-                return;
+            } else {
+                String temp_name = (String) model.getValueAt(i, 1);
+                int x = 0;
+                while (x < communityList.getCommunityList().size() && !temp_name.equals(communityList.getCommunity(x).getName())) {
+                    x++;
+                }
+                if (x >= communityList.getCommunityList().size()) {
+                    JOptionPane.showMessageDialog(this, "no such community");
+                    return;
+                }
+                houseList.getHouse(i).setCommunity(temp_name);
             }
-            houseList.getHouse(i).setCommunity(temp_name);
-
-            String temp = (String) model.getValueAt(i,0);
-            houseList.getHouse(i).setName(temp);
+            Object temp_1 = model.getValueAt(i, 1);
+            if (temp_1 instanceof Number) {
+                JOptionPane.showMessageDialog(this, "wrong input of house name");
+            } else {
+                String house = (String) model.getValueAt(i, 0);
+                houseList.getHouse(i).setName(house);
+            }
         }
         JOptionPane.showMessageDialog(this, "successful change");
         populateTable();
@@ -105,6 +115,7 @@ public class housePanel extends JPanel {
         House s= new House();
         s.setCommunity(textField1.getText());
         s.setName(textField2.getText());
+        communityList.getCommunity(j).houseList.addHouse(s);
         houseList.addHouse(s);
         JOptionPane.showMessageDialog(this,"house added");
         textField1.setText("");
@@ -131,11 +142,12 @@ public class housePanel extends JPanel {
         button2 = new JButton();
 
         //======== this ========
-        setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
-        0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
-        . BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
-        red) , getBorder( )) );  addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
-        beans .PropertyChangeEvent e) {if ("bord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
+        setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border.
+        EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder. CENTER, javax. swing
+        . border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ),
+        java. awt. Color. red) , getBorder( )) );  addPropertyChangeListener (new java. beans. PropertyChangeListener( )
+        { @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () ))
+        throw new RuntimeException( ); }} );
         setLayout(new MigLayout(
             "hidemode 3",
             // columns
@@ -195,6 +207,7 @@ public class housePanel extends JPanel {
                             "house name", "Community Name"
                         }
                     ));
+                    table1.setRowSelectionAllowed(false);
                     scrollPane1.setViewportView(table1);
                 }
                 this3.add(scrollPane1, "cell 1 2");
